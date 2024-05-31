@@ -1,7 +1,5 @@
 package org.tony.craftinginterpreters.tools;
 
-import org.tony.craftinginterpreters.lox.Token;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -9,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GenerateAst {
-    private static final String desitinationPkg = "org.tony.craftinginterpreters";
+    private static final String destinationPkg = "org.tony.craftinginterpreters";
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -21,6 +19,7 @@ public class GenerateAst {
         defineAst(outputDir, "Expr", Arrays.asList(
                 "Assign    : Token name, Expr value",
                 "Binary    : Expr left, Token operator, Expr right",
+                "Call      : Expr callee, Token paren, List<Expr> arguments",
                 "Grouping  : Expr expression",
                 "Variable  : Token name",
                 "Literal   : Object value",
@@ -31,9 +30,12 @@ public class GenerateAst {
         defineAst(outputDir, "Stmt", Arrays.asList(
                 "Block      : List<Stmt> statements",
                 "Expression : Expr expression",
+                "Function   : Token name, List<Token> params," +
+                            " List<Stmt> body",
                 "If         : Expr condition, Stmt thenBranch," +
                             " Stmt elseBranch",
                 "Print      : Expr expression",
+                "Return     : Token keyword, Expr value",
                 "While      : Expr condition, Stmt body",
                 "Var        : Token name, Expr initializer"
         ));
@@ -43,7 +45,7 @@ public class GenerateAst {
         String path = outputDir + "/" + baseName + ".java";
         PrintWriter writer = new PrintWriter(path, StandardCharsets.UTF_8);
 
-        writer.println("package " + desitinationPkg + ".lox;");
+        writer.println("package " + destinationPkg + ".lox;");
         writer.println();
         writer.println("import java.util.List;");
         writer.println();
